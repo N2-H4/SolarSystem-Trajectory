@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="static/bootstrap_css/bootstrap.min.css">
+  <script type="text/javascript" src="static/sending_data.js"></script>
+  <script type="text/javascript" src="static/p5.min.js"></script>
+  <script type="text/javascript" src="static/sketch.js"></script>
+</head>
+<body style="background: #0d0e12;">
+  <div class="container-fluid mt-3">
+    <div class="row align-items-start">
+      <div class="col">
+        <form>
+          <div class="container-fluid">
+            <div class="row">
+            <div class="col-sm-3">
+              <label class="text-light" for="posx">Position X (km)</label>
+            </div>
+            <div class="col-sm-3">
+              <input class="bg-secondary text-light form-control" type="number" id="posx" value="80000000" onchange="posChanged()">
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-3">
+              <label class="text-light" for="posy">Position Y (km)</label>
+            </div>
+            <div class="col-sm-3">
+              <input class="bg-secondary text-light form-control" type="number" id="posy" value="-30000000" onchange="posChanged()">
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-3">
+              <label class="text-light" for="velx">Velocity X (km/second)</label>
+            </div>
+            <div class="col-sm-3">
+              <input class="bg-secondary text-light form-control" type="number" id="velx" value="30">
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-3">
+              <label class="text-light" for="vely">Velocity Y (km/second)</label>
+            </div>
+            <div class="col-sm-3">
+              <input class="bg-secondary text-light form-control" type="number" id="vely" value="5">
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-3">
+              <label class="text-light" for="time_amount">Simulate for (seconds)</label>
+            </div>
+            <div class="col-sm-3">
+              <input class="bg-secondary text-light form-control" type="number" id="time_amount" value="9000000">
+            </div>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-3">  
+              <button type="button" class="btn btn-secondary" onclick="calculateTraj()">Calculate</button>
+            </div>
+            <div class="col-sm-3"></div>
+            </div>
+            <div class="row" style="margin-top: 1rem;">
+            <div class="col-sm-3">
+              <button type="button" class="btn btn-secondary" id="cancel_button" onclick="abortCalculatingTraj()" style="display: none;" disabled>Cancel</button>
+            </div>
+            <div class="col-sm-3">
+              <p class="text-light" id="progress_text"></p>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-1">
+              <label class="text-light" for="p1_slider">Mercury</label>
+            </div>
+            <div class="col-sm-3">
+              <input style="width:180px;" type="range" min="0" max="360" value="0" id="p1_slider" oninput="sliderChanged(this,p1_text)">
+            </div>
+            <div class="col-sm-1">
+              <p class="text-light" id="p1_text">0</p>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-1">
+              <label class="text-light" for="p2_slider">Venus</label>
+            </div>
+            <div class="col-sm-3">
+              <input style="width:180px;" type="range" min="0" max="360" value="0" id="p2_slider" oninput="sliderChanged(this,p2_text)">
+            </div>
+            <div class="col-sm-1">
+              <p class="text-light" id="p2_text">0</p>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-1">
+              <label class="text-light" for="p3_slider">Earth</label>
+            </div>
+            <div class="col-sm-3">
+              <input style="width:180px;" type="range" min="0" max="360" value="0" id="p3_slider" oninput="sliderChanged(this,p3_text)">
+            </div>
+            <div class="col-sm-1">
+              <p class="text-light" id="p3_text">0</p>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-1">
+              <label class="text-light" for="p4_slider">Mars</label>
+            </div>
+            <div class="col-sm-3">
+              <input style="width:180px;" type="range" min="0" max="360" value="0" id="p4_slider" oninput="sliderChanged(this,p4_text)">
+            </div>
+            <div class="col-sm-1">
+              <p class="text-light" id="p4_text">0</p>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-1">
+              <label class="text-light" for="p5_slider">Jupiter</label>
+            </div>
+            <div class="col-sm-3">
+              <input style="width:180px;" type="range" min="0" max="360" value="0" id="p5_slider" oninput="sliderChanged(this,p5_text)">
+            </div>
+            <div class="col-sm-1">
+              <p class="text-light" id="p5_text">0</p>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-1">
+              <label class="text-light" for="p6_slider">Saturn</label>
+            </div>
+            <div class="col-sm-3">
+              <input style="width:180px;" type="range" min="0" max="360" value="0" id="p6_slider" oninput="sliderChanged(this,p6_text)">
+            </div>
+            <div class="col-sm-1">
+              <p class="text-light" id="p6_text">0</p>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-1">
+              <label class="text-light" for="p7_slider">Uranus</label>
+            </div>
+            <div class="col-sm-3">
+              <input style="width:180px;" type="range" min="0" max="360" value="0" id="p7_slider" oninput="sliderChanged(this,p7_text)">
+            </div>
+            <div class="col-sm-1">
+              <p class="text-light" id="p7_text">0</p>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-1">
+              <label class="text-light" for="p8_slider">Neptune</label>
+            </div>
+            <div class="col-sm-3">
+              <input style="width:180px;" type="range" min="0" max="360" value="0" id="p8_slider" oninput="sliderChanged(this,p8_text)">
+            </div>
+            <div class="col-sm-1">
+              <p class="text-light" id="p8_text">0</p>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-1">
+              <button type="button" class="btn btn-secondary" onclick="updatedSolarData()">Update</button>
+            </div>
+            <div class="col-sm-1"></div>
+            </div>
+          </div>
+        </form>
+      <div class="col">
+        <div id="canvas_holder"></div>
+      </div>
+    </div>
+</body>
+</html>
